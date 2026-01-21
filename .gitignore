@@ -1,0 +1,7 @@
+# Data files
+*.gz
+*.npy
+*.npz
+*.pyc
+# Virtual environment files
+mnist_numpy_env/

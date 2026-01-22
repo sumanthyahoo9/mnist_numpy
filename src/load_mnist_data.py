@@ -1,6 +1,8 @@
 """
 Load the training and test data
 """
+import os
+import numpy as np
 from preprocess_data import preprocess_images, one_hot_encode
 
 def get_data():
@@ -15,7 +17,7 @@ def get_data():
     assert x_test.shape == (10000, 1, 28, 28)
     assert y_train.shape == (60000, 10)
     assert y_test.shape == (10000, 10)
-    return x_train, x_train, x_test, y_test
+    return x_train, y_train, x_test, y_test
 
 if __name__ == "__main__":
     train_images, train_labels, test_images, test_labels = get_data()
@@ -24,3 +26,23 @@ if __name__ == "__main__":
     print(f"Each training data image is of shape {train_images[1].shape}")
     print(f"There are {test_images.shape[0]} images for training and {test_labels.shape[0]} as the labels")
     print(f"Each testing data image is of shape {test_images[1].shape}")
+    # Save the data in a compressed format
+    os.makedirs('data/processed', exist_ok=True)
+    np.savez_compressed(
+        file="data/processed/mnist_processed.npz",
+        x_train=train_images,
+        y_train=train_labels,
+        x_test=test_images,
+        y_test=test_labels
+    )
+    print("✓ Data saved to data/processed/mnist_processed.npz")
+    # Load the processed data
+    data = np.load('data/processed/mnist_processed.npz')
+    x_train, y_train = data['x_train'], data['y_train']
+    x_test, y_test = data['x_test'], data['y_test']
+    assert x_train.shape == (60000, 1, 28, 28)
+    assert y_train.shape == (60000, 10)
+    assert x_test.shape == (10000, 1, 28, 28)
+    assert y_test.shape == (10000, 10)
+
+

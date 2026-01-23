@@ -2,24 +2,8 @@
 We implement the main 2-layer CNN network here
 """
 import numpy as np
+from utils import *
 np.random.seed(42)
-
-# Activation functions
-def relu(x):
-    """
-    ReLU activation
-    """
-    return np.maximum(0, x)
-
-def softmax(x):
-    """
-    Softmax activation
-    x: (B, C)
-    """
-    exponentials = np.exp(x) # (B, C)
-    exponentials_sum = np.sum(exponentials, axis=1, keepdims=True) # (B, )
-    softmax_outputs = exponentials / (exponentials_sum + 1e-8) # (B, C) probabilities
-    return softmax_outputs
 
 
 class ConvLayer:
@@ -43,7 +27,7 @@ class ConvLayer:
         patches.shape = (B, h_out*w_out, kernel_size*kernel_size*channels) [32, 784, 9]
         """
         # Work with channels first
-        image_patches, height_out, width_out = self._im2col(x)
+        image_patches, height_out, width_out = im2col(x, self.padding, self.kernel_size, self.stride)
         # Reshape the weights
         c_out, _, _, _ = self.weights.shape
         weights_reshaped = np.reshape(self.weights, (c_out, -1)) # (16, 9)

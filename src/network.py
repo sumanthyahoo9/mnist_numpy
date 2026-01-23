@@ -37,36 +37,6 @@ class ConvLayer:
         outputs = np.reshape(outputs, (image_patches.shape[0],height_out, width_out, c_out))
         outputs = outputs.transpose(0, 3, 1, 2)
         return outputs
-    
-    def _im2col(self, image):
-        """
-        Extract patches
-        """
-        batch_size, channels, height, width = image.shape
-        # Pad image, ONLY ALONG the height and width dimensions
-        # Keep the batch size and channels as they are!
-        if self.padding > 0:
-            padded_image = np.pad(
-                image,
-                ((0, 0), (0, 0), (self.padding, self.padding), (self.padding, self.padding)),
-                mode='constant'
-            )
-        else:
-            padded_image = image
-        # Calculate the output dimensions
-        height_out = (height + 2*self.padding-self.kernel_size) // self.stride + 1
-        width_out = (width + 2*self.padding-self.kernel_size) // self.stride + 1
-        # Get the strides
-        s0, s1, s2, s3 = padded_image.strides
-        # Create the strided view
-        patches = np.lib.stride_tricks.as_strided(
-            padded_image,
-            shape=(batch_size, height_out, width_out, self.kernel_size, self.kernel_size, channels),
-            strides=(s0, self.stride*s2, self.stride*s3, s2, s3, s1)
-        )
-        # Reshape to (num_patches, self.kernel_size*self.kernel_size*channels)
-        patches = np.reshape(patches, (batch_size, height_out*width_out, self.kernel_size*self.kernel_size*channels))
-        return patches, height_out, width_out
 
 class MaxPool:
     """

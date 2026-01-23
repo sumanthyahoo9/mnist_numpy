@@ -1,5 +1,7 @@
 """
 Functions to do backprop algorithm and update the gradients for each param
+dL/dW_layer = dL/dout × dout/dW_layer
+            = gradient_from_next × local_gradient
 """
 import numpy as np
 from utils import im2col
@@ -66,7 +68,6 @@ def conv_backward(d_out, x, weights, stride=1, padding=0):
     """
     B, C_in, H, W = x.shape
     c_out, _, kernel_height, kernel_width = weights.shape
-    _, _, h_out, w_out = d_out.shape
 
     # Step 1: Gradient wrt the bias
     # db: Sum gradient over all spatial positions and batch

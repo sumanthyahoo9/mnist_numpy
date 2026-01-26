@@ -19,6 +19,21 @@ def get_data():
     assert y_test.shape == (10000, 10)
     return x_train, y_train, x_test, y_test
 
+def create_batches(index, batch_size=32, mode="train"):
+    """
+    Create batches of data
+    """
+    x_train, y_train, x_test, y_test = get_data()
+    assert mode in ["train", "test"]
+    assert index < len(x_train) - batch_size - 1
+    if mode == "train":
+        assert index < len(x_train) - batch_size
+        return x_train[index:index+batch_size, :, :, :], y_train[index:index+batch_size, :]
+    assert index < len(x_test) - batch_size
+    return x_test[index:index+batch_size, :, :, :], y_test[index:index+batch_size, :]
+
+
+
 if __name__ == "__main__":
     train_images, train_labels, test_images, test_labels = get_data()
     print("\n")

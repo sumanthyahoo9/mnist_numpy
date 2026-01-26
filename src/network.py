@@ -126,12 +126,12 @@ class SimpleCNN:
             B, H, W = X.shape
             X = np.reshape(X, (B, 1, H, W))
         elif X.shape[3] == 1:
-            B, H, W, 1 = X.shape
+            B, H, W, C = X.shape
             X = np.reshape(X, (B, 1, H, W))
         # Convolution --> ReLU --> Pooling
         out = self.conv1.forward(X)
         out = relu(out)
-        out = self.max_pool.forward(X)
+        out = self.max_pool.forward(out)
 
         # FC --> ReLU
         out = self.fc1.forward(out)

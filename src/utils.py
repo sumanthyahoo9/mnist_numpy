@@ -63,4 +63,12 @@ def categorical_cross_entropy(probs, labels):
     losses = labels * np.log(probs) # P(x) * log{Q(x)}
     losses = np.sum(losses, axis=1) # Sum the values across each column, FOR EACH sample in the batch
     loss = -np.mean(losses)
-    return loss.item()
+    grads = (probs-labels)/len(labels)
+    return loss.item(), grads
+
+def compute_accuracy(model, X, y):
+    """Compute classification accuracy"""
+    probs = model.forward(X)
+    preds = np.argmax(probs, axis=1)
+    labels = np.argmax(y, axis=1)
+    return np.mean(preds == labels)

@@ -57,7 +57,7 @@ def maxpool_backward(d_out, x, pool_size=2):
                     max_idx = np.unravel_index(np.argmax(window), window.shape)
                     # Route the gradient to that position
                     dx[b, c, h_start+max_idx[0], w_start+max_idx[1]] += d_out[b, c, i, j]
-    return d_out
+    return dx
 
 def conv_backward(d_out, x, weights, stride=1, padding=0):
     """
@@ -107,7 +107,7 @@ def conv_backward(d_out, x, weights, stride=1, padding=0):
                 for h in range(H):
                     for w in range(W):
                         h_start, w_start = h, w
-                        region = d_out_padded[b, c_out, h_start:h_start+kernel_height, w_start:w_start+kernel_width]
+                        region = d_out_padded[b, c_o, h_start:h_start+kernel_height, w_start:w_start+kernel_width]
                         # Accumulate the gradients
                         dx[b, c_in, h, w] += np.sum(
                             region*w_flipped[c_o, c_in]
